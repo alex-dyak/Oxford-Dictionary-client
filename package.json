@@ -1,0 +1,31 @@
+{
+  "name": "dictionaryproject",
+  "version": "1.0.0",
+  "description": "dictionaryproject",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "bootstrap": "^5.2.2"
+  },
+  "watch": {
+    "test": "{src,test}/*.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "npm-watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alex-dyak/Oxford-Dictionary-client.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alex-dyak/Oxford-Dictionary-client/issues"
+  },
+  "homepage": "https://github.com/alex-dyak/Oxford-Dictionary-client#readme",
+  "keywords": []
+}
