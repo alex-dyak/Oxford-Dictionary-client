@@ -9,3 +9,7 @@ index:
 search_page:
     path: /search-page
     controller: App\Controller\IndexController::search
+
+tag_cloud_component:
+    path: /tag-cloud
+    controller: App\Controller\TagCloudController::tagCloud
