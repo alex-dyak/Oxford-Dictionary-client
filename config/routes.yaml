@@ -1,3 +1,11 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
+
+index:
+    path: /index
+    controller: App\Controller\IndexController::index
+
+search_page:
+    path: /search-page
+    controller: App\Controller\IndexController::search

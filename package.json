@@ -6,16 +6,20 @@
   "directories": {
     "test": "tests"
   },
-  "dependencies": {},
+  "dependencies": {
+    "popper.js": "^1.16.1"
+  },
   "devDependencies": {
-    "bootstrap": "^5.2.2"
+    "bootstrap": "^5.2.2",
+    "nodemon": "^2.0.20"
   },
   "watch": {
     "test": "{src,test}/*.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "npm-watch"
+    "watch": "npm-watch",
+    "dev": "nodemon"
   },
   "repository": {
     "type": "git",
