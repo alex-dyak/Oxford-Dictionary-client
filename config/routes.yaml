@@ -8,7 +8,7 @@ index:
 
 search_page:
     path: /search-page
-    controller: App\Controller\IndexController::search
+    controller: App\Controller\SearchController::search
 
 tag_cloud_component:
     path: /tag-cloud

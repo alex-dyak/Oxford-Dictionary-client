@@ -28,11 +28,4 @@ class IndexController extends AbstractController
             'form' => $form,
         ]);
     }
-
-    public function search(Request $request): Response
-    {
-        return new Response(
-            '<html><body>You are searching the word: '.$request->get('word').'</body></html>'
-        );
-    }
 }
