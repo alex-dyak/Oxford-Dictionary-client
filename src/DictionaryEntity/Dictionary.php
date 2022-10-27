@@ -2,18 +2,18 @@
 
 namespace App\DictionaryEntity;
 
+use App\Exceptions\DictionaryException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
 class Dictionary
 {
-    private const APP_ID = "6a21e184";
-    private const APP_KEY = "1f19c11bda4354a2f9e8d0bda25aae89";
-
     public function entries(string $lang, string $word): array
     {
-        $fields = 'definitions,pronunciations';
-        $url    = 'https://od-api.oxforddictionaries.com:443/api/v2/entries/'.$lang.'/'.$word.'?fields='.$fields;
+        $app_id  = $_ENV['DICTIONARY_APP_ID'];
+        $app_key = $_ENV['DICTIONARY_APP_KEY'];
+        $fields  = 'definitions,pronunciations';
+        $url     = 'https://od-api.oxforddictionaries.com:443/api/v2/entries/'.$lang.'/'.$word.'?fields='.$fields;
 
         $client    = new Client();
         $exception = [];
@@ -21,18 +21,22 @@ class Dictionary
         try {
             $response = $client->get($url, [
                 'headers' => [
-                    'app_id'  => self::APP_ID,
-                    'app_key' => self::APP_KEY,
+                    'app_id'  => $app_id,
+                    'app_key' => $app_key,
                 ],
             ]);
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
-                $exception = (string)$e->getResponse()->getBody();
-                $exception = json_decode($exception);
+                if ($e->getResponse()->getStatusCode() == '404') {
+                    $exception = (string)$e->getResponse()->getBody();
+                    $exception = json_decode($exception);
 
-                return array($exception);
+                    return array($exception);
+                } else {
+                    throw new DictionaryException('Thomething went wrong', $e->getResponse()->getStatusCode());
+                }
             } else {
-                return array($e->getMessage(), 503);
+                throw new DictionaryException('Thomething went wrong', 503);
             }
         }
 
