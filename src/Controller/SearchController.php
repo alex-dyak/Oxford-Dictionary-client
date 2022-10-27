@@ -15,7 +15,7 @@ class SearchController extends AbstractController
     {
         $word = strtolower($request->get('word'));
 
-        $dictionary = new Dictionary();
+        $dictionary = new Dictionary($_ENV['DICTIONARY_APP_ID'], $_ENV['DICTIONARY_APP_KEY']);
         $lang       = $request->get('lang') ?: 'en-gb';
         $entries    = $dictionary->entries($lang, $word);
 

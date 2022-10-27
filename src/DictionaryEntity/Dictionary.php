@@ -8,10 +8,17 @@ use GuzzleHttp\Exception\RequestException;
 
 class Dictionary
 {
+    private $app_id;
+    private $app_key;
+
+    public function __construct(string $app_id, string $app_key)
+    {
+        $this->app_id  = $app_id;
+        $this->app_key = $app_key;
+    }
+
     public function entries(string $lang, string $word): array
     {
-        $app_id  = $_ENV['DICTIONARY_APP_ID'];
-        $app_key = $_ENV['DICTIONARY_APP_KEY'];
         $fields  = 'definitions,pronunciations';
         $url     = 'https://od-api.oxforddictionaries.com:443/api/v2/entries/'.$lang.'/'.$word.'?fields='.$fields;
 
@@ -21,8 +28,8 @@ class Dictionary
         try {
             $response = $client->get($url, [
                 'headers' => [
-                    'app_id'  => $app_id,
-                    'app_key' => $app_key,
+                    'app_id'  => $this->app_id,
+                    'app_key' => $this->app_key,
                 ],
             ]);
         } catch (RequestException $e) {
