@@ -1,13 +1,46 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <h1>Searched word: {{ word }}</h1>
-    <div class="col-6">
-        <p>Definitions</p>
-        <ul></ul>
-    </div>
-    <div class="col-6">
-        <p>Pronunciations</p>
-        <ul></ul>
-    </div>
+    <h1>Word: {{ word }}</h1>
+    {% set error = false %}
+    {% for entry in entries %}
+        {% if entry.error|default %}
+            <p style="color: red">{{ entry.error }}</p>
+            {% set error = entry.error %}
+        {% endif %}
+    {% endfor %}
+    {% if not error %}
+        <div class="col-6">
+            <p>Definitions</p>
+            <ul>
+                {% for entry in entries %}
+                    {% if entry.definitions|default %}
+                        {% for definition in entry.definitions %}
+                            <li>{{ definition }}</li>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-6">
+            <p>Pronunciations</p>
+            <ul>
+                {% set previous = false %}
+                {% for entry in entries %}
+                    {% if entry.pronunciations|default %}
+                    {% for pronunciation in entry.pronunciations %}
+                        {% if previous != pronunciation %}
+                            <audio controls>
+                                <source src="{{ pronunciation }}" type="audio/ogg">
+                                <source src="{{ pronunciation }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        {% endif %}
+                        {% set previous = pronunciation %}
+                    {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}
