@@ -15,5 +15,11 @@
     </head>
     <body>
         {% block body %}{% endblock %}
+        <div id="sidebar">
+            {{ render(controller(
+                'App\\Controller\\TagCloudController::tagCloud',
+                { 'max': 50 }
+            )) }}
+        </div>
     </body>
 </html>
