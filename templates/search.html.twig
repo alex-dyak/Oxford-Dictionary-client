@@ -2,13 +2,9 @@
 
 {% block body %}
     <h1>Word: {{ word }}</h1>
-    {% set error = false %}
-    {% for entry in entries %}
-        {% if entry.error|default %}
-            <p style="color: red">{{ entry.error }}</p>
-            {% set error = entry.error %}
-        {% endif %}
-    {% endfor %}
+    {% if error %}
+        <p style="color: red">{{ error }}</p>
+    {% endif %}
     {% if not error %}
         <div class="col-6">
             <p>Definitions</p>
