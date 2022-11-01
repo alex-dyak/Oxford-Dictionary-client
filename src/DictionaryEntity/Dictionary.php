@@ -23,7 +23,6 @@ class Dictionary
         $url     = 'https://od-api.oxforddictionaries.com:443/api/v2/entries/'.$lang.'/'.$word.'?fields='.$fields;
 
         $client    = new Client();
-        $exception = [];
 
         try {
             $response = $client->get($url, [
@@ -34,50 +33,39 @@ class Dictionary
             ]);
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
-                if ($e->getResponse()->getStatusCode() == '404') {
-                    $exception = (string)$e->getResponse()->getBody();
-                    $exception = json_decode($exception);
-
-                    return array($exception);
-                } else {
-                    throw new DictionaryException('Thomething went wrong', $e->getResponse()->getStatusCode());
-                }
+                throw new DictionaryException('Dictionary API returned error: ' . $e->getMessage(), $e->getResponse()->getStatusCode());
             } else {
-                throw new DictionaryException('Thomething went wrong', 503);
+                throw new DictionaryException('Dictionary API returned empty response: ' . $e->getMessage(), 503);
             }
         }
 
-        if ( ! $exception) {
-            $content = json_decode($response->getBody());
-            $entries = [];
-            foreach ($content->results as $result) {
-                foreach ($result->lexicalEntries as $lexicalEntry) {
-                    $entry = new Entry();
+        $content = json_decode($response->getBody());
+        $entries = [];
+        foreach ($content->results as $result) {
+            foreach ($result->lexicalEntries as $lexicalEntry) {
+                $entry = new Entry();
 
-                    $audio_files = [];
-                    $senses      = [];
-                    foreach ($lexicalEntry->entries as $item) {
-                        if ( ! empty($item->pronunciations)) {
-                            foreach ($item->pronunciations as $pronunciation) {
-                                $audio_files[] = $pronunciation->audioFile;
-                            }
-                        }
-                        if ( ! empty($item->pronunciations)) {
-                            foreach ($item->senses as $sens) {
-                                $senses[] = $sens->definitions[0];
-                            }
+                $audio_files = [];
+                $senses      = [];
+                foreach ($lexicalEntry->entries as $item) {
+                    if ( ! empty($item->pronunciations)) {
+                        foreach ($item->pronunciations as $pronunciation) {
+                            $audio_files[] = $pronunciation->audioFile;
                         }
                     }
-                    $entry->setPronunciations($audio_files);
-                    $entry->setDefinitions($senses);
-
-                    $entries[] = $entry;
+                    if ( ! empty($item->pronunciations)) {
+                        foreach ($item->senses as $sens) {
+                            $senses[] = $sens->definitions[0];
+                        }
+                    }
                 }
-            }
+                $entry->setPronunciations($audio_files);
+                $entry->setDefinitions($senses);
 
-            return $entries;
-        } else {
-            return $exception;
+                $entries[] = $entry;
+            }
         }
+
+        return $entries;
     }
 }
